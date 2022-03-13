@@ -47,7 +47,7 @@ open class _Friend: NSManagedObject {
     var fullName: String?
 
     @NSManaged open
-    var identifier: Int32
+    var identifier: String!
 
     // MARK: - Relationships
 

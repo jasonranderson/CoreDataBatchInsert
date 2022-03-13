@@ -48,32 +48,12 @@ open class Person: _Person, CodableManagedObject {
         address = try container.decode(String.self, forKey: .address)
         summary = try container.decode(String.self, forKey: .about)
         
-//        if let friends = try container.decodeIfPresent([Any].self, forKey: .friends) as? [[String: Any]] {
-//            let decoder = JSONDecoder()
-//            decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
-//            var parsedFriends: [Friend] = []
-//            for friendDict in friends {
-//                if let data = try? JSONSerialization.data(withJSONObject: friendDict, options: .fragmentsAllowed),
-//                   let entityId = friendDict["id"] as? Int32 {
-//                    let friend = try context.fetchOrCreateEntityWithIdentifier(Friend.self, entityId, key: "identifier", decoder: decoder, data: data)
-//                    parsedFriends.append(friend)
-//                }
-//            }
-//            addFriends(NSSet(array: parsedFriends))
-//        }
-//
-//        if let tags = try container.decodeIfPresent([Any].self, forKey: .tags) as? [[String: String]] {
-//            let decoder = JSONDecoder()
-//            decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
-//            var parsedTags: [Tag] = []
-//            for tagDict in tags {
-//                if let data = try? JSONSerialization.data(withJSONObject: tagDict, options: .fragmentsAllowed),
-//                   let entityId = tagDict["name"] {
-//                    let tag = try context.fetchOrCreateEntityWithIdentifier(Tag.self, entityId, key: "name", decoder: decoder, data: data)
-//                    parsedTags.append(tag)
-//                }
-//            }
-//            addTags(NSSet(array: parsedTags))
-//        }
+        if let friends = try container.decodeIfPresent([Friend].self, forKey: .friends) {
+            addFriends(NSSet(array: friends))
+        }
+
+        if let tags = try container.decodeIfPresent([Tag].self, forKey: .tags) {
+            addTags(NSSet(array: tags))
+        }
     }
 }

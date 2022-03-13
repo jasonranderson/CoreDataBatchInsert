@@ -29,6 +29,8 @@ public final class CoreDataManager {
     
     func loadTestData(completion: @escaping (Result<Bool, Error>) -> Void) {
         performInBackground { context in
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy //overwrite existing data with new data
+            
             let decoder = JSONDecoder()
             decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
             guard let dataUrl = Bundle.main.url(forResource: "data", withExtension: "json"),

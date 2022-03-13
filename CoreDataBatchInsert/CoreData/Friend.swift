@@ -35,7 +35,7 @@ open class Friend: _Friend, CodableManagedObject {
     }
     
     private func assignValues(container: KeyedDecodingContainer<Friend.CodingKeys>, context _: NSManagedObjectContext) throws {
-        identifier = try container.decode(Int32.self, forKey: .id)
+        identifier = try container.decode(String.self, forKey: .id)
         fullName = try container.decode(String.self, forKey: .name)
     }
 }
