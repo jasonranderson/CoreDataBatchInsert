@@ -4,6 +4,27 @@ import CoreData
 @objc(Friend)
 open class Friend: _Friend, CodableManagedObject {
 	typealias EntityClass = Friend
+    typealias ImportStruct = ImportData.ImportFriend
+    
+    static func batchInsertRequest(from items: [ImportData.ImportFriend], entity: NSEntityDescription) -> NSBatchInsertRequest {
+        var index = 0
+        let total = items.count
+        
+        let retval = NSBatchInsertRequest(entity: entity, managedObjectHandler: { (object) -> Bool in
+            guard index < total else { return true }
+            
+            if let friend = object as? Friend {
+                let friendData = items[index]
+                friend.identifier = friendData.identifier
+                friend.fullName = friendData.name
+            }
+            
+            index += 1
+            return false
+        })
+        retval.resultType = .objectIDs
+        return retval
+    }
     
     enum CodingKeys: String, CodingKey {
         case id, name

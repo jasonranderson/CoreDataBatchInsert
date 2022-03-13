@@ -9,4 +9,7 @@ import CoreData
 
 protocol CodableManagedObject: Codable, DecoderUpdatable {
     associatedtype EntityClass: NSManagedObject
+    associatedtype ImportStruct: Decodable
+    
+    static func batchInsertRequest(from items: [ImportStruct], entity: NSEntityDescription) -> NSBatchInsertRequest
 }

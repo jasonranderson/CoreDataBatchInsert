@@ -4,6 +4,38 @@ import CoreData
 @objc(Person)
 open class Person: _Person, CodableManagedObject {
 	typealias EntityClass = Person
+    typealias ImportStruct = ImportData
+    
+    
+    static func batchInsertRequest(from items: [ImportData], entity: NSEntityDescription) -> NSBatchInsertRequest {
+        var index = 0
+        let total = items.count
+        
+        let retval = NSBatchInsertRequest(entity: entity, managedObjectHandler: { (object) -> Bool in
+            guard index < total else { return true }
+            
+            if let person = object as? Person {
+                let personData = items[index]
+                person.identifier = personData.identifier
+                person.isActive = personData.isActive
+                person.picturePath = personData.picture
+                person.age = Int32(personData.age)
+                person.eyeColor = personData.eyeColor
+                person.fullName = personData.name
+                person.gender = personData.gender
+                person.company = personData.company
+                person.email = personData.email
+                person.phone = personData.phone
+                person.address = personData.address
+                person.summary = personData.about
+            }
+            
+            index += 1
+            return false
+        })
+        retval.resultType = .objectIDs
+        return retval
+    }
     
     enum CodingKeys: String, CodingKey {
         case id, isActive, picture, age, eyeColor, name, gender, company, email, phone, address, about, tags, friends
@@ -48,12 +80,12 @@ open class Person: _Person, CodableManagedObject {
         address = try container.decode(String.self, forKey: .address)
         summary = try container.decode(String.self, forKey: .about)
         
-//        if let friends = try container.decodeIfPresent([Friend].self, forKey: .friends) {
-//            addFriends(NSSet(array: friends))
-//        }
-//
-//        if let tags = try container.decodeIfPresent([Tag].self, forKey: .tags) {
-//            addTags(NSSet(array: tags))
-//        }
+        if let friends = try container.decodeIfPresent([Friend].self, forKey: .friends) {
+            addFriends(NSSet(array: friends))
+        }
+
+        if let tags = try container.decodeIfPresent([Tag].self, forKey: .tags) {
+            addTags(NSSet(array: tags))
+        }
     }
 }

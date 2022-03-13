@@ -29,7 +29,7 @@ public final class CoreDataManager {
     
     func loadTestData(completion: @escaping (Result<Bool, Error>) -> Void) {
         performInBackground { context in
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy //overwrite existing data with new data
+            context.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy //overwrite existing data with new data
             
             let decoder = JSONDecoder()
             decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
@@ -51,6 +51,8 @@ public final class CoreDataManager {
     
     func batchLoadTestData(completion: @escaping (Result<Bool, Error>) -> Void) {
         performInBackground { context in
+            context.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+            
             let decoder = JSONDecoder()
             guard let dataUrl = Bundle.main.url(forResource: "data", withExtension: "json"),
                   let data = try? Data(contentsOf: dataUrl) else {
@@ -61,9 +63,28 @@ public final class CoreDataManager {
                   }
             do {
                 let importItems = try decoder.decode([ImportData].self, from: data)
-                let batch = self.newBatchInsertRequest(with: importItems)
-                try context.execute(batch)
+                let personBatch = Person.batchInsertRequest(from: importItems, entity: Person.entity())
+                
+                if let result = try context.execute(personBatch) as? NSBatchInsertResult,
+                   let objectIDs = result.result as? [NSManagedObjectID] {
+                    
+                    let people = try context.existingManagedObjectsWithIDs(Person.self, objectIDs: objectIDs)
+                    for person in people {
+                        if let personData = importItems.first(where: {$0.identifier == person.identifier}) {
+                            let friendBatch = Friend.batchInsertRequest(from: personData.friends, entity: Friend.entity())
+                            if let friendResult = try context.execute(friendBatch) as? NSBatchInsertResult,
+                               let friendObjectIds = friendResult.result as? [NSManagedObjectID] {
+                                
+                                let friendObjects = try context.existingManagedObjectsWithIDs(Friend.self, objectIDs: friendObjectIds)
+                                person.addFriends(NSSet(array: friendObjects))
+                            }
+                        }
+                    }
+                    
+                }
+                
                 self.saveContext(context)
+                
                 DispatchQueue.main.async {
                     completion(Result.success(true))
                 }
@@ -74,11 +95,6 @@ public final class CoreDataManager {
                 }
             }
         }
-    }
-    
-    private func newBatchInsertRequest(with data: [ImportData]) -> NSBatchInsertRequest {
-        let batchInsert = NSBatchInsertRequest(entityName: Person.entityName(), objects: data.map{$0.toDictionary()})
-        return batchInsert
     }
     
     init() {

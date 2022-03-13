@@ -75,4 +75,16 @@ extension NSManagedObjectContext {
             deleted += 1
         }
     }
+    
+    func existingManagedObjectsWithIDs<T: NSManagedObject>(_ entityClass: T.Type, objectIDs: [NSManagedObjectID]) throws -> [T] {
+        var retval: [T] = []
+        
+        for objectId in objectIDs {
+            if let object = self.object(with: objectId) as? T {
+                retval.append(object)
+            }
+        }
+        
+        return retval
+    }
 }
