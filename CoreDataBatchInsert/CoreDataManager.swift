@@ -63,6 +63,7 @@ public final class CoreDataManager {
                 let importItems = try decoder.decode([ImportData].self, from: data)
                 let batch = self.newBatchInsertRequest(with: importItems)
                 try context.execute(batch)
+                self.saveContext(context)
                 DispatchQueue.main.async {
                     completion(Result.success(true))
                 }
@@ -105,7 +106,7 @@ struct ImportData: Decodable {
     }
 
     struct ImportFriend: Decodable {
-        let identifier: Int
+        let identifier: String
         let name: String
 
         enum CodingKeys: String, CodingKey {
@@ -115,7 +116,7 @@ struct ImportData: Decodable {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            identifier = try container.decode(Int.self, forKey: .identifier)
+            identifier = try container.decode(String.self, forKey: .identifier)
             name = try container.decode(String.self, forKey: .name)
         }
         

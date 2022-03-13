@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         print("starting import \(Date())")
         activityIndicator.startAnimating()
         activityIndicator.isHidden = false
-        viewModel.importData { result in
+        viewModel.bulkImportData { result in
             switch result {
             case .failure(let error): print("error occurred: \(error)")
             case .success(_): print("date imported")

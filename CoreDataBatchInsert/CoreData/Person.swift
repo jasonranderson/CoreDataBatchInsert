@@ -48,12 +48,12 @@ open class Person: _Person, CodableManagedObject {
         address = try container.decode(String.self, forKey: .address)
         summary = try container.decode(String.self, forKey: .about)
         
-        if let friends = try container.decodeIfPresent([Friend].self, forKey: .friends) {
-            addFriends(NSSet(array: friends))
-        }
-
-        if let tags = try container.decodeIfPresent([Tag].self, forKey: .tags) {
-            addTags(NSSet(array: tags))
-        }
+//        if let friends = try container.decodeIfPresent([Friend].self, forKey: .friends) {
+//            addFriends(NSSet(array: friends))
+//        }
+//
+//        if let tags = try container.decodeIfPresent([Tag].self, forKey: .tags) {
+//            addTags(NSSet(array: tags))
+//        }
     }
 }
