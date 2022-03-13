@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G417" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Friend" representedClassName="Friend" syncable="YES">
+        <attribute name="fullName" optional="YES" attributeType="String"/>
+        <attribute name="identifier" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="friends" inverseEntity="Person"/>
+    </entity>
+    <entity name="Person" representedClassName="Person" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="age" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="company" optional="YES" attributeType="String"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="eyeColor" optional="YES" attributeType="String"/>
+        <attribute name="fullName" optional="YES" attributeType="String"/>
+        <attribute name="gender" optional="YES" attributeType="String"/>
+        <attribute name="identifier" attributeType="String"/>
+        <attribute name="isActive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String"/>
+        <attribute name="picturePath" optional="YES" attributeType="String"/>
+        <attribute name="summary" optional="YES" attributeType="String"/>
+        <relationship name="friends" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Friend" inverseName="person" inverseEntity="Friend"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="people" inverseEntity="Tag"/>
+    </entity>
+    <entity name="Tag" representedClassName="Tag" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="people" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="tags" inverseEntity="Person"/>
+    </entity>
+    <elements>
+        <element name="Friend" positionX="-36" positionY="108" width="128" height="74"/>
+        <element name="Person" positionX="-63" positionY="-18" width="128" height="239"/>
+        <element name="Tag" positionX="-54" positionY="99" width="128" height="59"/>
+    </elements>
+</model>

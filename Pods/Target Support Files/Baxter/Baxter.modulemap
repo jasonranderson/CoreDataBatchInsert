@@ -1,0 +1,6 @@
+framework module Baxter {
+  umbrella header "Baxter-umbrella.h"
+
+  export *
+  module * { export * }
+}

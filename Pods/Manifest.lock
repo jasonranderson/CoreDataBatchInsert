@@ -1,0 +1,20 @@
+PODS:
+  - Baxter (2.0.1):
+    - Stanley
+  - Stanley (3.0.1)
+
+DEPENDENCIES:
+  - Baxter
+
+SPEC REPOS:
+  trunk:
+    - Baxter
+    - Stanley
+
+SPEC CHECKSUMS:
+  Baxter: 4a89f087e2bcf6b85c6ea3a886db9ca4156e2205
+  Stanley: 888c0159ab9eee03d960465d8c4761d29b90a6dd
+
+PODFILE CHECKSUM: d531848b8f4496a2be92fb3657b0e7c683d9cf18
+
+COCOAPODS: 1.11.2
